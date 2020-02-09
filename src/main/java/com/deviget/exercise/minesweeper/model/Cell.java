@@ -12,6 +12,7 @@ public class Cell {
     private boolean discovered;
     private boolean mine;
     private boolean flagged;
+    private long value;
 
     public Cell(int posX, int posY) {
         this.posX = posX;
@@ -31,6 +32,6 @@ public class Cell {
     }
 
     public boolean isAdjacent(Cell other) {
-        return Math.abs(this.getIndex() - other.getIndex()) <= 1;
+        return Math.abs(this.getPosX() - other.getPosX()) <= 1 && Math.abs(this.getPosY() - other.getPosY()) <= 1;
     }
 }

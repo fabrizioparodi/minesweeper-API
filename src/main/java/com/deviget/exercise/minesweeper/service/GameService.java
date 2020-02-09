@@ -1,6 +1,6 @@
 package com.deviget.exercise.minesweeper.service;
 
-import com.deviget.exercise.minesweeper.model.DiscoverRequest;
+import com.deviget.exercise.minesweeper.model.ClickRequest;
 import com.deviget.exercise.minesweeper.model.Game;
 import com.deviget.exercise.minesweeper.model.GameRequest;
 import com.deviget.exercise.minesweeper.repository.GameRepository;
@@ -22,9 +22,23 @@ public class GameService {
         return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Game not exist"));
     }
 
-    public Game discoverCell(DiscoverRequest request) {
+    public Game discoverCell(ClickRequest request) {
         Game game = findGame(request.getGameId());
+        if (game.isOver()) {
+            throw new RuntimeException("Game already finished, cannot update it.");
+        }
+
         game.discoverCell(request.getPosX(), request.getPosY());
+        return this.repository.save(game);
+    }
+
+    public Game flagCell(ClickRequest request) {
+        Game game = findGame(request.getGameId());
+        if (game.isOver()) {
+            throw new RuntimeException("Game already finished, cannot update it.");
+        }
+
+        game.flagCell(request.getPosX(), request.getPosY());
         return this.repository.save(game);
     }
 

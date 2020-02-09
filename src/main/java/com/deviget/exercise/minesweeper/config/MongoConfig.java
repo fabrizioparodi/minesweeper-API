@@ -1,4 +1,4 @@
-package com.deviget.exercise.minesweeper;
+package com.deviget.exercise.minesweeper.config;
 
 import cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean;
 import org.springframework.context.annotation.Bean;

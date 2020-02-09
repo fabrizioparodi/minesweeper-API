@@ -1,4 +1,4 @@
-package com.deviget.exercise.minesweeper;
+package com.deviget.exercise.minesweeper.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -56,21 +56,63 @@ public class Game {
         this.cells.stream().limit(this.mines).forEach(Cell::markAsMine);
         // Optional sort. Just to get more readable in the response.
         this.cells.sort(Comparator.comparing(Cell::getIndex));
+
+        // Sets value for each cell (how many mines has near)
+        this.cells.stream()
+                .filter(cell -> !cell.isMine())
+                .forEach(cell -> cell.setValue(
+                        this.cells.stream().filter(other -> cell.isAdjacent(other) && other.isMine()).count())
+                );
+    }
+
+    private Cell findCell(int posX, int posY) {
+        return this.cells.stream()
+                .filter(cell -> cell.getPosX() == posX && cell.getPosY() == posY)
+                .findFirst().orElseThrow(() -> new RuntimeException("Cell not found for the given coordinates"));
+    }
+
+    private boolean hasAllCellsDiscovered() {
+        return this.cells.stream().filter(cell -> !cell.isMine()).allMatch(Cell::isDiscovered);
     }
 
     public void discoverCell(int posX, int posY) {
-        Cell selectedCell = this.cells.stream()
-                .filter(cell -> cell.getPosX() == posX && cell.getPosY() == posY)
-                .findFirst().orElseThrow(() -> new RuntimeException("Cell not found for the given coordinates"));
+        Cell selectedCell = this.findCell(posX, posY);
+
+        // If the clicked cell is flagged, there is no action.
+        if (selectedCell.isFlagged()) {
+            return;
+        }
 
         // Increase the moves
         this.moves++;
 
-        // Discover the clicked cell and the cells around it (the ones without mine or flagged).
+        // If the clicked cell is a mine, you lost!
+        if (selectedCell.isMine()) {
+            this.status = StatusEnum.LOST;
+            return;
+        }
+
+        // Discover the clicked cell and the cells around it (the ones without mine or flagged and value 0).
         selectedCell.setDiscovered(true);
         this.cells.stream()
-                .filter(cell -> selectedCell.isAdjacent(cell) && !cell.isMine() && !cell.isFlagged())
+                .filter(cell -> selectedCell.isAdjacent(cell) && !cell.isMine() && !cell.isFlagged() && cell.getValue() == 0)
                 .forEach(Cell::markAsDiscovered);
+
+        // Checks if you win the game.
+        if (this.hasAllCellsDiscovered()) {
+            this.status = StatusEnum.WON;
+        }
+    }
+
+    public void flagCell(int posX, int posY) {
+        Cell selectedCell = this.findCell(posX, posY);
+
+        // Flag the clicked cell.
+        selectedCell.setFlagged(true);
+    }
+
+    public boolean isOver() {
+        return StatusEnum.WON.equals(this.status) || StatusEnum.LOST.equals(this.status);
     }
 
 }
