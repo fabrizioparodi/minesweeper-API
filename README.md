@@ -1,4 +1,20 @@
 # minesweeper-API
+## Personal Notes
+
+- Given the time of 5 hours i chose a embedded mongo database to persist the state of the game, instead of an isolated instance. Giving more priority to the implementation of the core logic of the game.
+
+- Used Swagger as API Documentation tool to interact with the API. 
+
+- Each action the API receives is persisted, when a cell is clicked or flagged or the game is paused. If we create a "save" endpoint to just receive the entire object and store it we are giving the whole responsibility to the client and in that case this exercise will not have so much sense.
+
+- I tried to cover the core things to have a playable game and with more priority, letting pending the point of the API client library and time tracking for example..
+
+### Deployed on Heroku
+
+- https://minesweeper-fparodi.herokuapp.com/swagger-ui.html
+
+# Deviget Code Challenge
+
 API test
 
 We ask that you complete the following challenge to evaluate your development skills. Please use the programming language and framework discussed during your interview to accomplish the following task.
@@ -8,7 +24,7 @@ Develop the classic game of [Minesweeper](https://en.wikipedia.org/wiki/Mineswee
 
 ## Show your work
 
-1.  Create a Public repository ( please dont make a pull request, clone the private repository and create a new plublic one on your profile)
+1.  Create a Public repository ( please dont make a pull request, clone the private repository and create a new public one on your profile)
 2.  Commit each step of your process so we can follow your thought process.
 
 ## What to build
