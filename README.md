@@ -7,7 +7,7 @@
 
 - Each action the API receives is persisted, when a cell is clicked or flagged or the game is paused. If we create a "save" endpoint to just receive the entire object and store it we are giving the whole responsibility to the client and in that case this exercise will not have so much sense.
 
-- I tried to cover the core things to have a playable game and with more priority, letting pending the point of the API client library and time tracking for example..
+- I tried to cover the core things to have a playable game and with more priority, letting pending the point of the API client library, time tracking for example.. and also a few validations that can be added.
 
 ### Deployed on Heroku
 
