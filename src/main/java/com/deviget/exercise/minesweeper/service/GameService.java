@@ -6,6 +6,8 @@ import com.deviget.exercise.minesweeper.model.GameRequest;
 import com.deviget.exercise.minesweeper.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService {
     private final GameRepository repository;
@@ -20,6 +22,10 @@ public class GameService {
 
     public Game findGame(String id) {
         return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Game not exist"));
+    }
+
+    public List<Game> findGamesByUser(String username) {
+        return this.repository.findByUser(username);
     }
 
     public Game pauseGame(String id) {

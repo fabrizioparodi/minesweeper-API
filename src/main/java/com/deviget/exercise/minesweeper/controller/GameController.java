@@ -41,12 +41,23 @@ public class GameController {
         try {
             return ResponseEntity.ok(this.service.findGame(id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("load/user/{username}")
+    @ApiOperation(value = "Get all the games for the specified user", response = Game.class, responseContainer = "List")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Games retrieved successfully")})
+    public ResponseEntity<?> getGamesByUser(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(this.service.findGamesByUser(username));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PutMapping("discover")
-    @ApiOperation(value = "Discover a cell", response = Game.class)
+    @ApiOperation(value = "Discover a cell for the specified game", response = Game.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Game updated successfully")})
     public ResponseEntity<?> discoverCell(@RequestBody ClickRequest request) {
         try {
@@ -57,7 +68,7 @@ public class GameController {
     }
 
     @PutMapping("flag")
-    @ApiOperation(value = "Flag a cell", response = Game.class)
+    @ApiOperation(value = "Flag a cell for the specified game", response = Game.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Game updated successfully")})
     public ResponseEntity<?> flagCell(@RequestBody ClickRequest request) {
         try {
