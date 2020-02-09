@@ -1,5 +1,6 @@
 package com.deviget.exercise.minesweeper.controller;
 
+import com.deviget.exercise.minesweeper.model.DiscoverRequest;
 import com.deviget.exercise.minesweeper.model.Game;
 import com.deviget.exercise.minesweeper.model.GameRequest;
 import com.deviget.exercise.minesweeper.service.GameService;
@@ -41,6 +42,17 @@ public class GameController {
             return ResponseEntity.ok(this.service.findGame(id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("discover")
+    @ApiOperation(value = "Discover a cell", response = Game.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Game updated successfully")})
+    public ResponseEntity<?> discoverCell(@RequestBody DiscoverRequest request) {
+        try {
+            return ResponseEntity.ok(this.service.discoverCell(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
