@@ -47,14 +47,14 @@ public class Game {
         this.cells = new ArrayList<>();
         for (int x = 0; x < this.rows; x++) {
             for (int y = 0; y < this.cols; y++) {
-                this.cells.add(new Cell(x, y));
+                this.cells.add(new Cell(x, y, this.cells.size()));
             }
         }
 
         // Put the mines randomly inside the cells
         Collections.shuffle(cells);
         this.cells.stream().limit(this.mines).forEach(Cell::markAsMine);
-        // Optional sort. Just to get more readable in the response.
+        // Optional sort. Just to get more readable in the response for test purpose.
         this.cells.sort(Comparator.comparing(Cell::getIndex));
 
         // Sets value for each cell (how many mines has near)
@@ -113,6 +113,14 @@ public class Game {
 
     public boolean isOver() {
         return StatusEnum.WON.equals(this.status) || StatusEnum.LOST.equals(this.status);
+    }
+
+    public boolean isPaused() {
+        return StatusEnum.PAUSED.equals(this.status);
+    }
+
+    public void togglePause() {
+        this.status = this.isPaused() ? StatusEnum.OPEN : StatusEnum.PAUSED;
     }
 
 }

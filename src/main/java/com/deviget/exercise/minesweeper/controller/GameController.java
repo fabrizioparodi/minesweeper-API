@@ -67,4 +67,15 @@ public class GameController {
         }
     }
 
+    @PutMapping("pause/{id}")
+    @ApiOperation(value = "Pause or unpause a game", response = Game.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Game updated successfully")})
+    public ResponseEntity<?> pauseGame(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(this.service.pauseGame(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }

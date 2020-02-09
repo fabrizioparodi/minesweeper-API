@@ -22,11 +22,15 @@ public class GameService {
         return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Game not exist"));
     }
 
+    public Game pauseGame(String id) {
+        Game game = findGame(id);
+        game.togglePause();
+        return this.repository.save(game);
+    }
+
     public Game discoverCell(ClickRequest request) {
         Game game = findGame(request.getGameId());
-        if (game.isOver()) {
-            throw new RuntimeException("Game already finished, cannot update it.");
-        }
+        validateGameStatus(game);
 
         game.discoverCell(request.getPosX(), request.getPosY());
         return this.repository.save(game);
@@ -34,12 +38,19 @@ public class GameService {
 
     public Game flagCell(ClickRequest request) {
         Game game = findGame(request.getGameId());
-        if (game.isOver()) {
-            throw new RuntimeException("Game already finished, cannot update it.");
-        }
+        validateGameStatus(game);
 
         game.flagCell(request.getPosX(), request.getPosY());
         return this.repository.save(game);
+    }
+
+    private void validateGameStatus(Game game) {
+        if (game.isPaused()) {
+            throw new RuntimeException("Game is paused, cannot update it.");
+        }
+        if (game.isOver()) {
+            throw new RuntimeException("Game already finished, cannot update it.");
+        }
     }
 
 }
