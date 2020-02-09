@@ -30,6 +30,8 @@ public class GameService {
 
     public Game pauseGame(String id) {
         Game game = findGame(id);
+        validateGameIsNotOver(game);
+
         game.togglePause();
         return this.repository.save(game);
     }
@@ -51,9 +53,17 @@ public class GameService {
     }
 
     private void validateGameStatus(Game game) {
+        validateGameIsNotPaused(game);
+        validateGameIsNotOver(game);
+    }
+
+    private void validateGameIsNotPaused(Game game) {
         if (game.isPaused()) {
             throw new RuntimeException("Game is paused, cannot update it.");
         }
+    }
+
+    private void validateGameIsNotOver(Game game) {
         if (game.isOver()) {
             throw new RuntimeException("Game already finished, cannot update it.");
         }
