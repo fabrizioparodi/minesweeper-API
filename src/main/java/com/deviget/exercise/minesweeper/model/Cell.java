@@ -3,6 +3,9 @@ package com.deviget.exercise.minesweeper.model;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @Document
 public class Cell {
@@ -31,6 +34,25 @@ public class Cell {
     }
 
     public boolean isAdjacent(Cell other) {
-        return Math.abs(this.getPosX() - other.getPosX()) <= 1 && Math.abs(this.getPosY() - other.getPosY()) <= 1;
+        return this != other && Math.abs(this.getPosX() - other.getPosX()) <= 1 && Math.abs(this.getPosY() - other.getPosY()) <= 1;
+    }
+
+    /**
+     * Recursive method to discover the adjacent cells without mines near.
+     *
+     */
+    public void discoverMe(List<Cell> cells) {
+        this.markAsDiscovered();
+        List<Cell> adjacentCells = cells.stream()
+                .filter(cell -> this.isAdjacent(cell) && cell.canBeDiscoveredAutomatically())
+                .collect(Collectors.toList());
+
+        if (adjacentCells.size() > 0) {
+            adjacentCells.forEach(cell -> cell.discoverMe(cells));
+        }
+    }
+
+    private boolean canBeDiscoveredAutomatically() {
+        return !this.isDiscovered() && !this.isMine() && !this.isFlagged() && this.getValue() == 0;
     }
 }

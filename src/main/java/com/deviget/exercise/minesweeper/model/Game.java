@@ -93,10 +93,7 @@ public class Game {
         }
 
         // Discover the clicked cell and the cells around it (the ones without mine or flagged and value 0).
-        selectedCell.setDiscovered(true);
-        this.cells.stream()
-                .filter(cell -> selectedCell.isAdjacent(cell) && !cell.isMine() && !cell.isFlagged() && cell.getValue() == 0)
-                .forEach(Cell::markAsDiscovered);
+        selectedCell.discoverMe(cells);
 
         // Checks if you win the game.
         if (this.hasAllCellsDiscovered()) {
