@@ -7,7 +7,7 @@ Giving more priority to the implementation of the core logic of the game.
 - Used Swagger as API Documentation tool to interact with the API. 
 
 - Each action the API receives is persisted, when a cell is clicked or flagged or the game is paused. 
-If we create a "save" endpoint to just receive the entire object and store it we are giving the whole responsibility to the client to determine when a game is over or not and the actions we have to do when a cell is clicked, so in that case this exercise will not have so much sense. 
+If we create a "save" endpoint to just receive the entire object and store it we are giving the whole responsibility to the client to determine when a game is over or not and the actions we have to do when a cell is clicked (unless you send the whole json in every request), so in that case this exercise will not have so much sense. 
 I tried to manage the most logic i can from this side.
 
 - I tried to cover the core things to have a playable game and with more priority, 
