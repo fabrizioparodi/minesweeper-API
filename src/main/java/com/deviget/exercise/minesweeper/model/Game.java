@@ -8,9 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -39,85 +36,20 @@ public class Game {
         this.rows = request.getRows();
         this.cols = request.getCols();
         this.mines = request.getMines();
-
-        this.initializeCells();
     }
 
-    private void initializeCells() {
-        this.cells = new ArrayList<>();
-        for (int x = 0; x < this.rows; x++) {
-            for (int y = 0; y < this.cols; y++) {
-                this.cells.add(new Cell(x, y, this.cells.size()));
-            }
-        }
-
-        // Put the mines randomly inside the cells
-        Collections.shuffle(cells);
-        this.cells.stream().limit(this.mines).forEach(Cell::markAsMine);
-        // Optional sort. Just to get more readable in the response for test purpose.
-        this.cells.sort(Comparator.comparing(Cell::getIndex));
-
-        // Sets value for each cell (how many mines has near)
-        this.cells.stream()
-                .filter(cell -> !cell.isMine())
-                .forEach(cell -> cell.setValue(
-                        this.cells.stream().filter(other -> cell.isAdjacent(other) && other.isMine()).count())
-                );
-    }
-
-    private Cell findCell(int posX, int posY) {
+    public Cell findCell(int posX, int posY) {
         return this.cells.stream()
                 .filter(cell -> cell.getPosX() == posX && cell.getPosY() == posY)
                 .findFirst().orElseThrow(() -> new RuntimeException("Cell not found for the given coordinates"));
     }
 
-    private boolean hasAllCellsDiscovered() {
+    public boolean hasAllCellsDiscovered() {
         return this.cells.stream().filter(cell -> !cell.isMine()).allMatch(Cell::isDiscovered);
     }
 
-    public void discoverCell(int posX, int posY) {
-        Cell selectedCell = this.findCell(posX, posY);
-
-        // If the clicked cell is flagged, there is no action.
-        if (selectedCell.isFlagged()) {
-            return;
-        }
-
-        // Increase the moves
+    public void increaseMovement() {
         this.moves++;
-
-        // If the clicked cell is a mine, you lost!
-        if (selectedCell.isMine()) {
-            this.status = StatusEnum.LOST;
-            return;
-        }
-
-        // Discover the clicked cell and the cells around it (the ones without mine or flagged and value 0).
-        selectedCell.discoverMe(cells);
-
-        // Checks if you win the game.
-        if (this.hasAllCellsDiscovered()) {
-            this.status = StatusEnum.WON;
-        }
-    }
-
-    public void flagCell(int posX, int posY) {
-        Cell selectedCell = this.findCell(posX, posY);
-
-        // Flag the clicked cell.
-        selectedCell.setFlagged(true);
-    }
-
-    public boolean isOver() {
-        return StatusEnum.WON.equals(this.status) || StatusEnum.LOST.equals(this.status);
-    }
-
-    public boolean isPaused() {
-        return StatusEnum.PAUSED.equals(this.status);
-    }
-
-    public void togglePause() {
-        this.status = this.isPaused() ? StatusEnum.OPEN : StatusEnum.PAUSED;
     }
 
 }

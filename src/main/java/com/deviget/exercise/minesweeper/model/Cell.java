@@ -47,7 +47,7 @@ public class Cell {
                 .filter(cell -> this.isAdjacent(cell) && cell.canBeDiscoveredAutomatically())
                 .collect(Collectors.toList());
 
-        if (adjacentCells.size() > 0) {
+        if (!adjacentCells.isEmpty()) {
             adjacentCells.forEach(cell -> cell.discoverMe(cells));
         }
     }

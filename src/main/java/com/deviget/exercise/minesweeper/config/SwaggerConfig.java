@@ -25,8 +25,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Deviget Minesweeper Game Exercise")
-                .description("Deviget Minesweeper Game Exercise :: Made a REST API with Spring boot")
+        return new ApiInfoBuilder().title("Minesweeper Game Exercise")
+                .description("Minesweeper Game Exercise :: Made a REST API with Spring boot")
                 .contact(new Contact("Fabrizio Parodi", "https://www.linkedin.com/in/fabrizioparodi", "fabrizio.parodi.f@gmail.com"))
                 .build();
     }

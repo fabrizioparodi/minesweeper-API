@@ -3,70 +3,20 @@ package com.deviget.exercise.minesweeper.service;
 import com.deviget.exercise.minesweeper.model.ClickRequest;
 import com.deviget.exercise.minesweeper.model.Game;
 import com.deviget.exercise.minesweeper.model.GameRequest;
-import com.deviget.exercise.minesweeper.repository.GameRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class GameService {
-    private final GameRepository repository;
+public interface GameService {
 
-    public GameService(GameRepository repository) {
-        this.repository = repository;
-    }
+    List<Game> findGamesByUser(String username);
 
-    public Game createGame(GameRequest request) {
-        return this.repository.save(new Game(request));
-    }
+    Game createGame(GameRequest request);
 
-    public Game findGame(String id) {
-        return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Game not exist"));
-    }
+    Game findGame(String id);
 
-    public List<Game> findGamesByUser(String username) {
-        return this.repository.findByUser(username);
-    }
+    Game pauseGame(String id);
 
-    public Game pauseGame(String id) {
-        Game game = findGame(id);
-        validateGameIsNotOver(game);
+    Game discoverCell(ClickRequest request);
 
-        game.togglePause();
-        return this.repository.save(game);
-    }
-
-    public Game discoverCell(ClickRequest request) {
-        Game game = findGame(request.getGameId());
-        validateGameStatus(game);
-
-        game.discoverCell(request.getPosX(), request.getPosY());
-        return this.repository.save(game);
-    }
-
-    public Game flagCell(ClickRequest request) {
-        Game game = findGame(request.getGameId());
-        validateGameStatus(game);
-
-        game.flagCell(request.getPosX(), request.getPosY());
-        return this.repository.save(game);
-    }
-
-    private void validateGameStatus(Game game) {
-        validateGameIsNotPaused(game);
-        validateGameIsNotOver(game);
-    }
-
-    private void validateGameIsNotPaused(Game game) {
-        if (game.isPaused()) {
-            throw new RuntimeException("Game is paused, cannot update it.");
-        }
-    }
-
-    private void validateGameIsNotOver(Game game) {
-        if (game.isOver()) {
-            throw new RuntimeException("Game already finished, cannot update it.");
-        }
-    }
-
+    Game flagCell(ClickRequest request);
 }
